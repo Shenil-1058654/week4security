@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Docent toevoegen en verwijderen (admin)</title>
+</head>
+<body>
+    <h1>Docent toevoegen en verwijderen (admin)</h1>
+
+    <!-- Voor het toevoegen van een docent -->
+    <h2>Docent toevoegen</h2>
+    <form action="" method="post">
+        <label for="add_username">Gebruikersnaam:</label><br>
+        <input type="text" id="add_username" name="add_username" required><br><br>
+        <label for="add_password">Wachtwoord:</label><br>
+        <input type="password" id="add_password" name="add_password" required><br><br>
+        <label for="is_admin">Admin?</label>
+        <input type="checkbox" id="is_admin" name="is_admin" value="1"><br><br>
+        <input type="submit" name="add_user" value="Gebruiker toevoegen">
+    </form>
+
+    <!-- Voor het verwijderen van een docent -->
+    <h2>Gebruiker verwijderen</h2>
+    <form action="" method="post">
+        <label for="delete_username">Gebruikersnaam:</label><br>
+        <input type="text" id="delete_username" name="delete_username" required><br><br>
+        <input type="submit" name="delete_user" value="Gebruiker verwijderen">
+    </form>
+
+    {% if success_message %}
+    <p>{{ success_message }}</p>
+    {% endif %}
+</body>
+</html>

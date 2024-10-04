@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Myers-Briggs Test Resultaat</title>
+</head>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f8ff;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        color: #333;
+    }
+    .container {
+        text-align: center;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+        color: #007acc;
+    }
+    h2 {
+        font-size: 2em;
+        color: #555;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        animation: colorChange 3s ease-in-out infinite;
+    }
+    @keyframes colorChange {
+        0% { color: #ec0303; }
+        50% { color: #117c3c; }
+        100% { color: #2704ea; }
+    }
+</style>
+<body>
+    <h1>Jouw Myers-Briggs Personality Type:</h1>
+    <h2>{{ personality_type }}</h2>
+</body>
+</html>

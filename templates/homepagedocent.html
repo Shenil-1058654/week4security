@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Homepage Docent</title>
+</head>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        color: #333;
+        background-color: rgb(9, 210, 156);
+    }
+    .container {
+        text-align: center;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+        color: #007acc;
+    }
+    h2 {
+        font-size: 2em;
+        color: #fff;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        animation: colorChange 3s ease-in-out infinite;
+    }
+    @keyframes colorChange {
+        40% { color: #fff; }
+        30% { color: #e69a21; }
+        100% { color: #fff; }
+    }
+</style>
+<body>
+    <h1>Welcome, {{ session['docentName'] }}!</h1>
+    <h1>Student Overzicht</h1>
+    <table>
+        <h2>Docent Toevoegen</h2>
+        <li><a href="/docenttoevoegen">Gebruiker toevoegen en verwijderen (admin)</a></li>
+        <thead>
+            <tr>
+                <th>Studentnummer</th>
+                <th>Naam</th>
+                <th>Klas</th>
+                <th>Actiontype</th>
+                <th>Actie</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for student in student_data %}
+            <tr>
+                <td>{{ student['student_number'] }}</td>
+                <td>{{ student['student_name'] }}</td>
+                <td>{{ student['student_class'] }}</td>
+                <td>{{ student['resultaat'] }}</td>
+                <td><a href="/delete_student/{{ student['studentnummer'] }}">Verwijderen</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

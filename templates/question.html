@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Myers-Briggs Test</title>
+    <style>
+        #progressBar {
+            width: 100%;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+        }
+
+        #progress {
+            width: 0%;
+            height: 30px;
+            background-color: #4caf50;
+            border-radius: 5px;
+            transition: width 0.5s ease-in-out;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            margin: 0;
+            padding: 0;
+            display: grid;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
+        }
+     
+        h1 {
+            color: #007acc;
+        }
+        h2 {
+            font-size: 2em;
+            color: #555;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            animation: colorChange 3s ease-in-out infinite;
+        }
+        @keyframes colorChange {
+            0% { color: #ec0303; }
+            50% { color: #117c3c; }
+            100% { color: #2704ea; }
+        }
+    </style>
+</head>
+<body>
+    <h1>Vraag {{ question_data.statement_number }}</h1>
+    <div id="progressBar">
+        <div id="progress"></div>
+    </div>
+    <form action="{{ url_for('question') }}" method="POST" onsubmit="updateProgress()">
+        <p>{{ question_data.statement_choices[0].choice_text }}</p>
+        <input type="radio" id="choiceA" name="choice" value="{{ question_data.statement_choices[0].choice_result }}" required>
+        <label for="choiceA">A</label><br>
+        
+        <p>{{ question_data.statement_choices[1].choice_text }}</p>
+        <input type="radio" id="choiceB" name="choice" value="{{ question_data.statement_choices[1].choice_result }}">
+        <label for="choiceB">B</label><br><br>
+        
+        <input type="submit" value="Volgende" onclick="updateProgress()">
+    </form>
+
+    <script>
+        function updateProgress() {
+            var totalQuestions = parseInt("{{ total_questions }}");
+            var currentQuestion = parseInt("{{ current_question }}");
+            
+            var progress = (currentQuestion / totalQuestions) * 100;
+            document.getElementById("progress").style.width = progress + "%";
+        
+            document.getElementById("progress").style.maxWidth = "100%";
+        }
+        
+        window.onload = updateProgress;
+        
+
+        function updateProgressBar(selectedChoice) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "{{ url_for('question') }}", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    updateProgress(); 
+                }
+            };
+            xhr.send("selected_choice=" + selectedChoice);
+        }
+        
+    </script>
+    
+</body>
+</html>
