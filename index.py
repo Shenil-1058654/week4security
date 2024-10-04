@@ -1,5 +1,6 @@
 from flask import Flask, render_template, redirect, url_for, request, flash, session
 import sqlite3
+from flask_bcrypt import Bcrypt
 from threading import Lock
 import json
 import os
@@ -9,10 +10,9 @@ print(os.getcwd())
 
 load_dotenv()
 app = Flask(__name__, static_folder='static')
+# bcrypt
+bcrypt = Bcrypt(app)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'fallback_secret_key')  
-
-print("SECRET_KEY:", app.config['SECRET_KEY'])
-
 
 conn = sqlite3.connect('databases/myers.db', check_same_thread=False)
 cursor = conn.cursor()
@@ -77,14 +77,18 @@ def login():
         elif 'docentName' in request.form and 'password' in request.form:
             input_docent_name = request.form.get('docentName')
             input_password = request.form.get('password')
-
-            cursor.execute("SELECT Docentnaam, Wachtwoord FROM Docenten WHERE Docentnaam = ? AND Wachtwoord = ?", (input_docent_name, input_password))
+            
+            print("name = " + input_docent_name)
+            #Check if password is correct
+            cursor.execute("SELECT Wachtwoord FROM Docenten WHERE Docentnaam = ?", (input_docent_name,))
             result = cursor.fetchone()
+            check_password = bcrypt.check_password_hash(result[0].encode(), input_password)
 
-            if result:
+            if check_password is True:
                 session['docentName'] = input_docent_name
                 flash('Teacher login successful!', 'success')
                 return redirect(url_for('homepagedocent'))
+            
             else:
                 flash('Incorrect teacher name or password. Please try again.', 'error')
 
@@ -234,8 +238,8 @@ def docent_toevoegen():
                 error_message = 'Gebruiker met deze naam bestaat al. Kies een andere gebruikersnaam.'
                 return render_template('docenttoevoegen.html', error_message=error_message)
 
-
-            cursor.execute("INSERT INTO Docenten (Docentnaam, Wachtwoord, is_admin) VALUES (?, ?, ?)", (username, password, is_admin_value))
+            hashed_password = bcrypt.generate_password_hash(password).decode('utf8')
+            cursor.execute("INSERT INTO Docenten (Docentnaam, Wachtwoord, is_admin) VALUES (?, ?, ?)", (username, hashed_password, is_admin_value))
             conn.commit()
 
             success_message = 'Gebruiker succesvol toegevoegd!'
